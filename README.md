@@ -13,7 +13,7 @@ The platform ingests and fuses three distinct data streams to simulate realistic
 
 ### 🌐 Standalone Pre-Computed Prototype
 Due to external API rate limits on free-tier LLM endpoints, a reliable, fully rendered HTML prototype containing pre-computed agent outputs generated via unified JSON batching is available for immediate viewing:
-* **Live Interactive Link:** [View the Live Sales Copilot Prototype](https://github.com/BingoMuse/Muse-Miao_Tempus-Sales-Copilot-Case-Study/blob/3c0e16ce30daa893a01725c487ae2a4ce4c061c9/prototype/precomputed_copilot_demo.html)
+* **Live Interactive Link:** [View the Live Sales Copilot Prototype](https://BingoMuse.github.io/Muse-Miao_Tempus-Sales-Copilot-Case-Study/prototype/precomputed_copilot_demo.html)
 
 ### 💻 Running the Live Streamlit Pipeline App
 To launch the interactive multi-agent application locally on your machine, navigate to your root project directory and execute the following three commands in your terminal:
