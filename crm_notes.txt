@@ -1,0 +1,37 @@
+Doctor: Shilajit D. Kundu, MD
+Note: Dr. Kundu is interested in genomic profiling for prostate cancer patients but raised concerns about Medicare reimbursement for liquid biopsy. Several of his patients have had ctDNA testing claims denied and he will not order xF routinely until reimbursement is clearer. He asked specifically about current Medicare coverage policies and whether Tempus offers any financial assistance for patients regardless of insurance status.
+
+---
+
+Doctor: William J. Gradishar, MD
+Note: Dr. Gradishar's breast cancer patients are currently being tested through Foundation Medicine and he is satisfied with their service. He questioned whether Tempus offers anything meaningfully different for triple negative breast cancer and metastatic breast cancer, specifically asking whether xF liquid biopsy can detect ESR1 resistance mutations in patients on CDK4/6 inhibitors earlier than tissue re-biopsy. He wants head-to-head clinical evidence before considering switching vendors.
+
+---
+
+Doctor: Valerie M. Nelson, MD
+Note: Dr. Nelson's residents and NPs handle most test orders across her two suburban locations and she is concerned that introducing Tempus would require retraining staff and updating internal protocols. She specifically asked whether Tempus ordering can be done directly from Epic without logging into a separate portal, as her practice runs entirely on Epic and adding another system would create significant workflow friction.
+
+---
+
+Doctor: Lisa E. Flaum, MD
+Note: Dr. Flaum raised concerns about unexpected patient bills from genomic testing vendors, which has created friction in her breast cancer practice. She will not adopt a new testing platform without a clear financial assistance process. She asked specifically whether patients can know their maximum out-of-pocket cost at the time of ordering, and whether the financial assistance application process is immediate or requires a waiting period.
+
+---
+
+Doctor: Raanan Y. Alter, MD
+Note: Dr. Alter performs high volumes of robotic gynecologic surgeries and noted that minimally invasive specimens frequently yield insufficient tissue for NGS, resulting in quantity not sufficient failures that delay treatment planning for his ovarian cancer patients. He asked whether Tempus has a solution for low-yield tissue samples and whether liquid biopsy results are clinically equivalent to tissue for HRD testing in gynecologic cancers.
+
+---
+
+Doctor: Emma L. Barber, MD
+Note: Dr. Barber said turnaround time is her biggest barrier to adopting genomic testing. She needs results within 10 days to inform treatment planning around surgery and cited a prior vendor's 3-week turnaround that caused chemotherapy delays for two patients. She asked specifically what Tempus's average turnaround time is for both tissue-based and liquid biopsy testing, and whether results can be expedited for urgent surgical cases.
+
+---
+
+Doctor: Young Kwang Chae, MD
+Note: Dr. Chae expressed skepticism about comprehensive genomic profiling, citing an internal audit showing fewer than 30% of NGS results in his practice led to a therapy change. He questioned whether the cost and turnaround time are justified for routine use. He was more receptive when the conversation shifted to RNA fusion detection for his lung cancer patients, specifically asking about ALK and RET fusion detection rates using combined DNA and RNA sequencing versus DNA alone in advanced NSCLC.
+
+---
+
+Doctor: Al B. Benson III, MD
+Note: Dr. Benson raised concerns about data privacy, specifically around Tempus's use of patient data for AI model development. His hospital's legal team has flagged data sharing agreements with genomic vendors and he cannot move forward until the data governance terms are reviewed by Northwestern's legal and compliance teams. He asked for Tempus's data privacy and compliance policy documentation to share with his legal team.
