@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0a2540;--navy-mid:#163760;--blue:#1a56db;--blue-light:#e8f0fe;
+  --teal:#0d9488;--teal-light:#f0fdf9;--gold:#d97706;--gold-light:#fffbeb;
+  --white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-400:#94a3b8;--gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --radius:10px;--shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.06);
+}
+body{font-family:var(--font);background:var(--gray-50);color:var(--gray-800);font-size:14px;line-height:1.6;min-height:100vh}
+.app{display:grid;grid-template-columns:260px 1fr;grid-template-rows:56px 1fr;min-height:100vh}
+.topbar{grid-column:1/-1;background:var(--navy);display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:100}
+.logo-mark{width:28px;height:28px;background:linear-gradient(135deg,#1a56db,#0d9488);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white}
+.topbar-title{font-size:15px;font-weight:600;color:white;letter-spacing:-0.3px}
+.topbar-subtitle{font-size:12px;color:rgba(255,255,255,0.45);margin-left:4px}
+.topbar-badge{margin-left:auto;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);font-size:11px;font-family:var(--mono);padding:3px 10px;border-radius:20px}
+.sidebar{background:var(--white);border-right:1px solid var(--gray-200);padding:20px 0;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
+.sidebar-section{padding:0 16px;margin-bottom:4px}
+.sidebar-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);padding:12px 8px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:400;color:var(--gray-600);transition:all 0.15s;border:none;background:none;width:100%;text-align:left;font-family:var(--font)}
+.nav-item:hover{background:var(--gray-100);color:var(--gray-800)}
+.nav-item.active{background:var(--blue-light);color:var(--blue);font-weight:500}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--gray-200);flex-shrink:0}
+.nav-item.active .nav-dot{background:var(--blue)}
+.sidebar-divider{height:1px;background:var(--gray-100);margin:8px 16px}
+.formula-box{margin:8px 16px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:12px}
+.formula-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray-400);margin-bottom:8px}
+.formula-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:12px}
+.formula-weight{font-family:var(--mono);font-weight:500;font-size:11px;background:var(--navy);color:white;padding:1px 6px;border-radius:4px;flex-shrink:0}
+.formula-weight.teal{background:var(--teal)}
+.formula-weight.gold{background:var(--gold)}
+.formula-label{color:var(--gray-600);font-size:12px}
+.main{overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px}
+
+/* LEADERBOARD */
+.table-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.table-header-row{display:grid;grid-template-columns:40px 160px 130px 120px 70px 70px 90px 80px;padding:10px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray-400);gap:8px;align-items:center}
+.table-row{display:grid;grid-template-columns:40px 160px 130px 120px 70px 70px 90px 80px;padding:11px 16px;border-bottom:1px solid var(--gray-100);gap:8px;align-items:center;cursor:pointer;transition:background 0.12s}
+.table-row:hover{background:var(--gray-50)}
+.table-row:last-child{border-bottom:none}
+.table-row.top3{background:#eff6ff}
+.table-row.top3:hover{background:#dbeafe}
+.rank-badge{width:28px;height:28px;border-radius:50%;background:var(--gray-100);color:var(--gray-600);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;font-family:var(--mono)}
+.rank-badge.r1{background:#fef3c7;color:#92400e}
+.rank-badge.r2{background:#f1f5f9;color:#475569}
+.rank-badge.r3{background:#fef9c3;color:#78350f}
+.doc-name{font-size:13px;font-weight:500;color:var(--gray-800);line-height:1.3}
+.doc-inst{font-size:10px;color:var(--gray-400);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.focus-pill{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;background:var(--blue-light);color:var(--blue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.spec-pill{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;background:#f3e8ff;color:#7c3aed;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.score-bar-wrap{display:flex;align-items:center;gap:6px}
+.score-bar{flex:1;height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden}
+.score-bar-fill{height:100%;background:var(--blue);border-radius:3px}
+.score-val{font-size:11px;font-family:var(--mono);color:var(--gray-600);width:34px}
+.crm-pill{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--teal-light);color:var(--teal);white-space:nowrap}
+.crm-pill.none{background:var(--gray-100);color:var(--gray-400)}
+.patients-val{font-family:var(--mono);font-size:12px;color:var(--gray-700)}
+
+/* HUB LAYOUT */
+.hub-layout{display:grid;grid-template-columns:240px 1fr;gap:20px}
+.doctor-list{display:flex;flex-direction:column;gap:4px}
+.doctor-item{padding:10px 12px;border-radius:8px;cursor:pointer;border:1px solid var(--gray-200);transition:all 0.15s;background:var(--white)}
+.doctor-item:hover{border-color:var(--blue);background:var(--blue-light)}
+.doctor-item.active{border-color:var(--blue);background:var(--blue-light)}
+.di-rank{font-size:10px;font-family:var(--mono);color:var(--gray-400);margin-bottom:2px}
+.di-name{font-size:13px;font-weight:500;color:var(--gray-800)}
+.di-focus{font-size:11px;color:var(--gray-500);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* OUTPUT AREA */
+.output-area{display:flex;flex-direction:column;gap:20px}
+.output-header{margin-bottom:4px}
+.selected-name{font-size:22px;font-weight:600;color:var(--navy);letter-spacing:-0.4px}
+.selected-meta{font-size:13px;color:var(--gray-500);margin-top:3px}
+
+/* SECTION CARDS */
+.section-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.section-card-header{padding:14px 20px 10px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);display:flex;align-items:center;gap:10px}
+.section-card-title{font-size:16px;font-weight:600;color:var(--navy);letter-spacing:-0.2px}
+.agent-tag{font-size:10px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.06em;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.tag-blue{background:var(--blue-light);color:var(--blue)}
+.tag-teal{background:var(--teal-light);color:var(--teal)}
+.tag-navy{background:#e8edf5;color:var(--navy)}
+.tag-gold{background:var(--gold-light);color:var(--gold)}
+.section-card-body{padding:18px 20px;font-size:13.5px;line-height:1.8;color:var(--gray-700)}
+
+/* SNAPSHOT */
+.snapshot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.snapshot-metric{text-align:center;padding:14px 10px;background:var(--gray-50);border-radius:8px;border:1px solid var(--gray-100)}
+.sm-value{font-size:24px;font-weight:600;color:var(--navy);font-family:var(--mono)}
+.sm-label{font-size:11px;color:var(--gray-400);margin-top:3px}
+
+/* CRM OBSTACLE TAGS */
+.obstacle-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.obstacle-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+.obstacle-label{font-size:11px;color:var(--gray-500);font-weight:500}
+
+/* CRM NOTE BOX inside objection handler */
+.crm-inline{background:var(--gold-light);border:1px solid #fde68a;border-radius:8px;padding:12px 14px;margin-bottom:16px}
+.crm-inline-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#92400e;margin-bottom:5px}
+.crm-inline-text{font-size:12.5px;color:#78350f;line-height:1.6;font-style:italic}
+
+/* PRODUCT BULLETS */
+.product-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.product-item{display:flex;gap:10px;align-items:flex-start}
+.product-bullet{width:8px;height:8px;border-radius:50%;background:var(--teal);flex-shrink:0;margin-top:6px}
+.product-text{font-size:13.5px;line-height:1.75;color:var(--gray-700)}
+
+/* PITCH CARD */
+.pitch-card{background:var(--navy);border-radius:var(--radius);overflow:hidden;box-shadow:0 4px 16px rgba(10,37,64,0.25)}
+.pitch-header{padding:14px 20px 10px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px}
+.pitch-title{font-size:16px;font-weight:600;color:white;letter-spacing:-0.2px}
+.pitch-body{padding:20px;font-size:14px;line-height:1.85;color:rgba(255,255,255,0.92);font-weight:300;font-style:italic}
+
+/* EMPTY */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;color:var(--gray-400);gap:8px}
+.empty-icon{font-size:36px;margin-bottom:4px}
+.empty-title{font-size:15px;font-weight:500;color:var(--gray-600)}
+.empty-sub{font-size:13px}
+.page-title{font-size:18px;font-weight:600;color:var(--navy);letter-spacing:-0.3px;margin-bottom:3px}
+.page-sub{font-size:12px;color:var(--gray-400);margin-bottom:16px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="logo-mark">Tx</div>
+    <span class="topbar-title">Tempus Sales Copilot</span>
+    <span class="topbar-subtitle">· Northwestern Medicine Territory</span>
+  </div>
+  <div class="topbar-badge">Multi-Agent Pipeline · 4 Agents</div>
+</div>
+<div class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Navigation</div>
+    <button class="nav-item active" id="nav-lb" onclick="showTab('leaderboard')"><span class="nav-dot"></span>Territory Leaderboard</button>
+    <button class="nav-item" id="nav-hub" onclick="showTab('hub')"><span class="nav-dot"></span>Sales Execution Hub</button>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Ranking Formula</div>
+    <div class="formula-box">
+      <div class="formula-title">Composite Score</div>
+      <div class="formula-row"><span class="formula-weight">40%</span><span class="formula-label">Patient population</span></div>
+      <div class="formula-row"><span class="formula-weight teal">35%</span><span class="formula-label">Tempus panel fit (LLM)</span></div>
+      <div class="formula-row"><span class="formula-weight gold">25%</span><span class="formula-label">CRM engagement</span></div>
+    </div>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Data Sources</div>
+    <div style="padding:6px 8px;display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:12px;color:var(--gray-600);display:flex;gap:6px;align-items:center"><span style="color:var(--teal)">✓</span>nm_oncologists_market_intelligence.csv</div>
+      <div style="font-size:12px;color:var(--gray-600);display:flex;gap:6px;align-items:center"><span style="color:var(--teal)">✓</span>crm_notes.txt</div>
+      <div style="font-size:12px;color:var(--gray-600);display:flex;gap:6px;align-items:center"><span style="color:var(--teal)">✓</span>tempus_product_knowledge_base.md</div>
+    </div>
+  </div>
+</div>
+<div class="main" id="main"></div>
+</div>
+
+<script>
+const DOCTORS=[
+  {name:"Shilajit D. Kundu MD",rank:1,specialty:"Urologic Oncology",focus:"Prostate Cancer, Bladder Cancer, Kidney Cancer",institution:"NMH - Lurie Cancer Center",seniority:"High",patients:200,panelFit:5,crm:true,composite:0.892,
+   obstacles:["Reimbursement","Medicare Coverage"],
+   crmNote:"Dr. Kundu is interested in genomic profiling for prostate cancer patients but raised concerns about Medicare reimbursement for liquid biopsy. Several patients have had ctDNA testing claims denied. Will not order xF routinely until reimbursement is clearer. Asked about financial assistance availability.",
+   products:[
+     {name:"xT CDx",detail:"FDA-approved 648-gene tissue panel identifying <strong>HRD status for PARP inhibitor eligibility</strong> in prostate cancer, plus TMB and MSI across all GU tumor types. Combined with RNA sequencing, achieves a <strong>43.4% therapy match rate</strong> vs 29.6% with DNA alone."},
+     {name:"xF Liquid Biopsy",detail:"105-gene ctDNA panel from a <strong>blood draw only, results in 7 days</strong>. Detects resistance mutations non-invasively and captures unique actionable alterations in <strong>9% of metastatic patients</strong> not found in tissue alone — complementing xT CDx rather than replacing it."}
+   ],
+   snapshot:"Dr. Kundu ranks <strong>#1</strong> with the highest composite score of <strong>0.892</strong>, driven by the largest patient volume in the territory at <strong>200 patients/month</strong> and a perfect panel fit score of <strong>5/5</strong> — his urologic oncology focus maps directly to Tempus's xT CDx and xF panels for prostate, bladder, and kidney cancer. Active CRM history further elevates his priority as a high-impact conversion opportunity.",
+   objectionHandler:"Dr. Kundu, I completely understand the <strong>reimbursement concern</strong> — Medicare coverage for ctDNA testing has been inconsistent, and I don't want your patients caught with unexpected bills. Here's what Tempus has in place: <strong>all U.S. patients are eligible to apply for financial assistance regardless of insurance status</strong>, and the maximum out-of-pocket cost is provided immediately upon application at <strong>access.tempus.com</strong> — no waiting period. On the Medicare coverage question specifically, Tempus's xT CDx holds <strong>FDA companion diagnostic approval</strong>, which strengthens the reimbursement pathway considerably. I'd like to schedule a 20-minute call with our reimbursement support team to walk through exactly which of your prostate cancer patients would qualify — would next week work?",
+   elevatorPitch:"Dr. Kundu, with 200 prostate, bladder, and kidney cancer patients coming through your practice each month, I want to make sure every one of them has access to the genomic insights that could change their treatment plan. Tempus's xT CDx is FDA-approved and achieves a 43.4% therapy match rate when combined with RNA sequencing — nearly 15 points higher than DNA testing alone. For patients where tissue is limited, our xF liquid biopsy delivers results in just 7 days with a blood draw, and every patient has immediate access to financial assistance so cost is never a barrier. Can I show you what this would look like for three of your current prostate cancer cases?"},
+
+  {name:"William J. Gradishar MD",rank:2,specialty:"Medical Oncology",focus:"Breast Cancer, Triple Negative Breast Cancer, Precision Medicine",institution:"NMH - Prentice Women's Hospital",seniority:"High",patients:191,panelFit:5,crm:true,composite:0.871,
+   obstacles:["Competing Vendor","Insufficient Evidence"],
+   crmNote:"Currently using Foundation Medicine. Satisfied with service. Wants head-to-head clinical evidence showing Tempus is meaningfully different for TNBC and metastatic breast cancer. Specifically asked about ESR1 resistance mutation detection in patients on CDK4/6 inhibitors.",
+   products:[
+     {name:"xF Liquid Biopsy",detail:"Directly detects <strong>ESR1 resistance mutations</strong> — which emerge in 20–40% of patients on CDK4/6 inhibitors — from a blood draw with <strong>results in 7 days</strong>. Enables real-time resistance monitoring without repeat tissue biopsy, unlike Foundation Medicine's tissue-based approach."},
+     {name:"xT CDx (Tumor + Normal)",detail:"Matched approach reduces false positives by <strong>28%</strong> vs tumor-only analysis. Combined DNA + RNA achieves a <strong>43.4% therapy match rate</strong> vs 29.6% with DNA alone — a meaningful accuracy and actionability advantage for complex metastatic cases."}
+   ],
+   snapshot:"Dr. Gradishar ranks <strong>#2</strong> with a composite score of <strong>0.871</strong>, reflecting a high patient volume of <strong>191 breast cancer patients/month</strong> and a perfect panel fit score of <strong>5/5</strong> for his TNBC and precision medicine focus. His explicit interest in precision medicine and existing comfort with genomic testing make him a high-probability near-term conversion opportunity.",
+   objectionHandler:"Dr. Gradishar, you asked specifically about <strong>ESR1 resistance mutations</strong> in your metastatic breast cancer patients on CDK4/6 inhibitors — and this is exactly where Tempus xF is differentiated from Foundation Medicine's tissue-based panels. <strong>xF detects ESR1 mutations from a blood draw in 7 days</strong>, allowing you to catch resistance emerging before clinical progression rather than waiting for a biopsy to confirm it. For your TNBC patients, Tempus's combined DNA + RNA approach achieves a <strong>43.4% therapy match rate vs 29.6% with DNA alone</strong> — that 14-point gap translates to real additional patients matched to targeted therapies. I can share the published breast cancer-specific evidence package comparing xF ESR1 sensitivity head-to-head — would you be open to reviewing it before our next meeting?",
+   elevatorPitch:"Dr. Gradishar, for your metastatic breast cancer patients on CDK4/6 inhibitors, the question isn't just what mutations they started with — it's what resistance mutations are emerging right now. Tempus xF liquid biopsy detects ESR1 resistance from a blood draw in just 7 days, giving you the ability to pivot treatment before clinical progression. Combined with xT CDx, our DNA + RNA approach achieves a 43.4% therapy match rate — nearly 15 points higher than DNA sequencing alone. I know you're satisfied with Foundation Medicine, so I'd just ask: are you currently monitoring ESR1 longitudinally for your ER-positive patients? That's where I think you'd see the biggest difference."},
+
+  {name:"Valerie M. Nelson MD",rank:3,specialty:"Hematology and Medical Oncology",focus:"Breast Cancer, Colon Cancer, Lung Cancer, Lymphoma, Pancreas Cancer",institution:"NM Glenview / Lake Forest Hospital",seniority:"Mid",patients:167,panelFit:4,crm:true,composite:0.782,
+   obstacles:["Ordering Complexity","EHR Integration"],
+   crmNote:"Practice runs entirely on Epic. Residents and NPs handle most test orders across two suburban locations. Concerned that introducing Tempus would require retraining staff and updating protocols. Wants to know if ordering can be done directly from Epic without a separate login.",
+   products:[
+     {name:"xT CDx",detail:"Single FDA-approved 648-gene panel covering all of Dr. Nelson's tumor types — breast, lung, colorectal, lymphoma, and pancreas — in <strong>one order and one report format</strong>. Combined DNA + RNA achieves a <strong>43.4% therapy match rate</strong> and a <strong>96% clinical trial match rate</strong> with clinical data."},
+     {name:"xR RNA Sequencing",detail:"Adds whole transcriptome fusion detection, increasing <strong>ALK fusion identification by 18%</strong> over DNA alone in her lung cancer patients — identifying additional patients eligible for FDA-approved targeted therapies that standard sequencing misses."}
+   ],
+   snapshot:"Dr. Nelson ranks <strong>#3</strong> with a composite score of <strong>0.782</strong>, supported by a high patient volume of <strong>167 patients/month</strong> across multiple cancer types and active CRM engagement. Her suburban community-facing practice means streamlined workflow is the primary adoption driver — <strong>Epic EHR integration is the key conversion lever</strong> for this account.",
+   objectionHandler:"Dr. Nelson, the good news is that your <strong>Epic concern is exactly what Tempus solved first</strong> — we were the first NGS laboratory to deliver structured somatic variant results directly into <strong>Epic's Genomics module</strong>. Your residents and NPs can place Tempus orders and receive results without ever leaving Epic — <strong>no separate portal login required</strong>. We have 600+ direct data connections across 5,000 institutions, and Tempus is supported by Epic, Cerner, Meditech, and OncoEMR. The onboarding for your practice would take less than a week. Can I connect you with our Epic integration team for a 15-minute technical walkthrough for your staff?",
+   elevatorPitch:"Dr. Nelson, I know your team runs everything through Epic and the last thing you need is another portal for residents to manage. Tempus was the first genomic testing lab to integrate directly into Epic — your staff places the order in Epic and results come back into the chart automatically. For your lung, breast, colorectal, and lymphoma patients, xT CDx covers all tumor types in one panel with a 43.4% therapy match rate when RNA sequencing is added. With 167 patients a month across two locations, even a modest increase in actionable genomic findings translates to meaningful patient impact. Could we set up a 15-minute Epic demo with your lead NP this week?"},
+
+  {name:"Lisa E. Flaum MD",rank:4,specialty:"Hematology and Medical Oncology",focus:"Breast Cancer",institution:"NMH - Prentice Women's Hospital",seniority:"Mid",patients:166,panelFit:4,crm:true,composite:0.774,
+   obstacles:["Patient Billing","Financial Assistance"],
+   crmNote:"Patients have received unexpected bills from genomic testing vendors. Will not adopt a new testing platform without a clear financial assistance process. Wants to know maximum OOP cost at time of ordering and whether approval is immediate.",
+   products:[
+     {name:"xT CDx + HRD",detail:"Comprehensive tumor profiling identifying <strong>HER2, ESR1, and BRCA1/2 alterations</strong> alongside MSI and TMB — all actionable in breast cancer. The <strong>HRD add-on</strong> identifies PARP inhibitor eligibility for TNBC and BRCA-mutated cases, an increasingly standard treatment decision."},
+     {name:"xF Liquid Biopsy",detail:"Adds real-time <strong>ESR1 resistance monitoring</strong> for metastatic patients from a blood draw in <strong>7 days</strong> — no tissue re-biopsy needed. Financial assistance is available to <strong>all U.S. patients regardless of insurance</strong>, with maximum OOP cost provided immediately at access.tempus.com."}
+   ],
+   snapshot:"Dr. Flaum ranks <strong>#4</strong> with a composite score of <strong>0.774</strong>, driven by a high volume of <strong>166 breast cancer patients/month</strong> and active CRM engagement. Her single-tumor-type practice means <strong>every patient she sees is a candidate for Tempus's breast cancer portfolio</strong> — once the financial assistance concern is resolved, adoption is expected to be broad and immediate.",
+   objectionHandler:"Dr. Flaum, your patients' experience with <strong>unexpected bills</strong> is completely valid and I want to be direct about what Tempus offers: <strong>every U.S. patient is eligible to apply for financial assistance regardless of insurance status</strong>, and the maximum out-of-pocket cost is given to the patient <strong>immediately at the time of application</strong> at access.tempus.com — there is no waiting period. Your patients will know their cost before the test is ordered, which means you can have that conversation in the clinic rather than getting a call three months later from a confused patient. I'd love to walk you and your team through the patient financial process in a 20-minute session so you can see exactly what your breast cancer patients would experience — would that be helpful?",
+   elevatorPitch:"Dr. Flaum, I know you've had situations where patients were blindsided by bills from genomic testing, and that's something Tempus takes seriously. Every U.S. patient gets their maximum out-of-pocket cost immediately upon applying for financial assistance — no waiting, no surprises. For your 166 breast cancer patients per month, xT CDx provides comprehensive tumor profiling plus HRD testing for PARP inhibitor eligibility, and xF monitors ESR1 resistance with a blood draw in 7 days. Would it help to have our patient financial team come in for 20 minutes to walk your staff through exactly what the process looks like for a Medicare patient?"},
+
+  {name:"Raanan Y. Alter MD",rank:5,specialty:"Gynecologic Oncology",focus:"Gynecologic Cancers, Ovarian Cancer, Cervical Cancer, Uterine Cancer",institution:"NM Winfield / Delnor Hospital",seniority:"Mid",patients:152,panelFit:5,crm:true,composite:0.761,
+   obstacles:["Tissue Sufficiency","QNS Failures"],
+   crmNote:"High volume of robotic gynecologic surgeries yields small tissue specimens with frequent QNS failures, delaying treatment planning. Asked whether Tempus has a solution for low-yield tissue and whether liquid biopsy is equivalent to tissue for HRD testing in ovarian cancer.",
+   products:[
+     {name:"xT CDx + HRD + Auto-conversion",detail:"xT CDx automatically converts to <strong>xF liquid biopsy when tissue is insufficient</strong> — so patients never face a testing gap from a QNS result. <strong>Paige Predict tissue optimization</strong> reduces tissue utilization by <strong>18%</strong> and lowers QNS rate by <strong>15%</strong>, directly addressing robotic surgical specimen quality."},
+     {name:"HRD Test",detail:"Identifies ovarian cancer patients eligible for <strong>PARP inhibitors</strong> using genome-wide loss of heterozygosity and BRCA1/2 biallelic loss from xT CDx. When only liquid biopsy is available, <strong>xF detects BRCA1/2 mutations with high sensitivity</strong> to preserve HRD assessment even with insufficient tissue."}
+   ],
+   snapshot:"Dr. Alter ranks <strong>#5</strong> with a composite score of <strong>0.761</strong>, reflecting a strong patient volume of <strong>152 gynecologic oncology patients/month</strong> and a perfect panel fit score of <strong>5/5</strong>. His ovarian cancer focus maps precisely to Tempus's HRD testing and liquid biopsy capabilities, and his tissue sufficiency pain point has a <strong>direct, specific product solution</strong> ready to present.",
+   objectionHandler:"Dr. Alter, the <strong>tissue sufficiency issue in robotic gynecologic surgery</strong> is one of the most common challenges we hear from gynecologic oncologists, and Tempus has addressed it directly. First, xT CDx includes <strong>automatic conversion to xF liquid biopsy when tissue is insufficient</strong> — so your patients never face a testing gap because of a QNS result. Second, <strong>Paige Predict tissue optimization</strong>, integrated into Tempus's clinical lab workflow, reduces tissue utilization by <strong>18%</strong> and lowers the QNS rate by <strong>15%</strong> — meaning more of your small robotic specimens will clear the quality threshold in the first place. On your HRD equivalence question: for ovarian cancer, Tempus HRD uses genome-wide loss of heterozygosity from xT CDx as the primary signal, and when only liquid biopsy is available, xF detects BRCA1/2 mutations with high sensitivity. Can I share the ovarian cancer HRD validation data with you directly?",
+   elevatorPitch:"Dr. Alter, I know QNS failures from robotic specimens are creating real delays in your ovarian cancer treatment planning — and Tempus has built two specific solutions for exactly this problem. Paige Predict tissue optimization reduces tissue utilization by 18% and lowers the QNS rate by 15%, so more of your small specimens clear the quality bar. And if a specimen still doesn't make it, xT CDx automatically converts to xF liquid biopsy so the patient's genomic workup continues without interruption. For your ovarian cancer patients, HRD testing from xT CDx identifies PARP inhibitor eligibility. With 152 patients per month, how many QNS results are you seeing in a typical month right now?"},
+
+  {name:"Emma L. Barber MD",rank:6,specialty:"Gynecologic Oncology",focus:"Gynecologic Cancers, Ovarian Cancer, Cervical Cancer, Uterine Cancer",institution:"NMH - Prentice Women's Hospital",seniority:"Early",patients:145,panelFit:5,crm:true,composite:0.743,
+   obstacles:["Turnaround Time"],
+   crmNote:"Turnaround time is the biggest barrier. Needs genomic results within 10 days to inform treatment planning around surgery. A prior vendor's 3-week turnaround caused chemotherapy delays for two patients last year.",
+   products:[
+     {name:"xF Liquid Biopsy",detail:"Blood draw only, <strong>results in 7 days</strong> — well within the 10-day surgical planning window. No tissue processing delays, and no risk of QNS failure. Directly addresses the turnaround time barrier with a concrete published metric."},
+     {name:"xT CDx + HRD",detail:"Comprehensive tissue profiling with <strong>HRD testing for PARP inhibitor eligibility</strong> in ovarian cancer. Includes <strong>automatic conversion to xF</strong> if tissue quality is insufficient, ensuring the genomic workup is never stalled by a failed specimen."}
+   ],
+   snapshot:"Dr. Barber ranks <strong>#6</strong> with a composite score of <strong>0.743</strong>, driven by a strong patient volume of <strong>145 gynecologic oncology patients/month</strong> and a perfect panel fit score of <strong>5/5</strong>. As an early-career faculty with high volume, she represents a long-horizon high-value relationship — and her <strong>turnaround time concern is directly addressable</strong> with Tempus's published TAT metrics.",
+   objectionHandler:"Dr. Barber, I want to be specific about turnaround time because I know this directly affected two of your patients. For <strong>xF liquid biopsy, Tempus delivers results in 7 days</strong> from specimen retrieval — well within your 10-day window, and it only requires a blood draw so there's no waiting for tissue processing. For xT Heme, our turnaround is <strong>9 days from specimen receipt</strong>. On the tissue side, if you need comprehensive profiling with HRD for treatment planning, xT CDx includes <strong>automatic conversion to xF if tissue quality is insufficient</strong>, so you never lose time to a failed specimen. I'd like to send you our published turnaround time data — and I'd suggest we start with one or two cases so you can verify the TAT firsthand before committing fully. Would that work?",
+   elevatorPitch:"Dr. Barber, I know a 3-week turnaround isn't just an inconvenience — it's a patient care problem when you're planning surgery and chemotherapy. Tempus xF liquid biopsy delivers results in 7 days from a blood draw, and xT Heme in 9 days from specimen receipt — both within your 10-day planning window. For your ovarian cancer patients, HRD testing from xT CDx identifies PARP inhibitor candidates, and the auto-conversion to liquid biopsy ensures you never lose time to a QNS result. With 145 gynecologic oncology patients per month, what would it mean for your practice to have genomic results before every surgery consultation?"},
+
+  {name:"Young Kwang Chae MD",rank:7,specialty:"Hematology and Medical Oncology",focus:"Breast Cancer, Lung Cancer, GI Cancer, Genitourinary Cancers",institution:"NMH - Lurie Cancer Center",seniority:"High",patients:138,panelFit:5,crm:true,composite:0.731,
+   obstacles:["Clinical Utility Skepticism","Low Therapy Change Rate"],
+   crmNote:"Internal audit showed fewer than 30% of NGS results led to a therapy change. Skeptical about routine use. More receptive to RNA fusion detection for NSCLC — asked specifically about ALK and RET fusion detection rates with DNA + RNA vs DNA alone.",
+   products:[
+     {name:"xT CDx + xR (DNA + RNA)",detail:"Adding xR RNA sequencing to xT CDx increases <strong>ALK fusion detection by 18%</strong> in NSCLC and identifies <strong>21% more patients eligible for FDA-approved targeted therapies</strong> via fusion detection — fusions that DNA sequencing structurally misses. This directly addresses the therapy change rate concern."},
+     {name:"DPYD Pharmacogenomics",detail:"Identifies patients at elevated risk for <strong>5-FU and capecitabine toxicity</strong> — a patient safety benefit for GI cancer cases. Available as an add-on to xT CDx + xR with no additional tissue required, adding clinical utility beyond tumor profiling alone."}
+   ],
+   snapshot:"Dr. Chae ranks <strong>#7</strong> with a composite score of <strong>0.731</strong>, supported by a high patient volume of <strong>138 patients/month</strong> across multiple tumor types and a perfect panel fit score of <strong>5/5</strong>. His demonstrated openness to RNA fusion data for NSCLC provides a <strong>clear pilot entry point</strong> — a 10-patient lung cancer pilot is the recommended next step.",
+   objectionHandler:"Dr. Chae, your audit finding that <strong>fewer than 30% of NGS results changed therapy</strong> is a fair challenge — and it's exactly the data point that makes Tempus's combined DNA + RNA approach compelling. <strong>xR RNA sequencing increases ALK fusion detection by 18%</strong> over DNA alone in advanced NSCLC, and identifies <strong>21% more patients with driver fusions eligible for targeted therapies</strong>. If we start with your NSCLC patients specifically, we can track your own therapy change rate with the combined panel versus your historical DNA-only baseline — I'd expect you'd see a meaningful increase in actionability for that subset. I'm not suggesting you switch everything overnight — I'm suggesting <strong>a 10-patient NSCLC pilot</strong> and let your own data make the case. Would you be open to that?",
+   elevatorPitch:"Dr. Chae, your audit showing 30% therapy change rates with NGS is actually the exact reason I wanted to talk to you. When Tempus adds RNA sequencing to DNA profiling, ALK fusion detection in NSCLC improves by 18% — and across all fusion-driven cancers, 21% more patients become eligible for FDA-approved targeted therapies. The fusions DNA misses are real and actionable. For your lung cancer patients specifically, the combined xT CDx + xR panel directly addresses the clinical utility gap you identified. Can we start with a 10-patient NSCLC pilot — your data, your patients — and measure the difference together?"},
+
+  {name:"Al B. Benson III MD",rank:8,specialty:"Medical Oncology",focus:"Colon Cancer, Esophageal Cancer, Pancreas Cancer, Liver Cancer, Neuroendocrine Tumor",institution:"NMH - Lurie Cancer Center",seniority:"High",patients:124,panelFit:4,crm:true,composite:0.698,
+   obstacles:["Data Privacy","Legal Review"],
+   crmNote:"Data privacy concerns around Tempus's use of patient data for AI model development. Hospital legal team reviewing data sharing agreements. Cannot proceed until data governance terms are reviewed by Northwestern's legal and compliance teams. Requested compliance documentation.",
+   products:[
+     {name:"xT CDx + DPYD + PurIST",detail:"xT CDx covers <strong>MSI and TMB for immunotherapy eligibility</strong> in colorectal cancer, plus <strong>KRAS/NRAS profiling</strong> for anti-EGFR therapy. DPYD pharmacogenomics flags patients at elevated risk for <strong>5-FU toxicity</strong> — a direct patient safety benefit. PurIST classifies pancreas cancer into <strong>basal-like vs classical subtypes</strong> to guide FOLFIRINOX decisions."},
+     {name:"Tumor Origin (TO)",detail:"Resolves <strong>carcinoma of unknown primary</strong> cases using RNA expression across <strong>68 cancer types</strong> — a meaningful clinical utility addition for GI oncology practice where ambiguous histology arises regularly."}
+   ],
+   snapshot:"Dr. Benson ranks <strong>#8</strong> with a composite score of <strong>0.698</strong>, reflecting a solid volume of <strong>124 GI oncology patients/month</strong> and active CRM engagement. As a <strong>full Professor at Lurie Cancer Center with extensive industry relationships</strong>, converting Dr. Benson creates institutional momentum well beyond his individual practice — legal clearance is the prerequisite gating condition.",
+   objectionHandler:"Dr. Benson, I appreciate you being transparent about where things stand with your legal team — that's exactly the conversation we need to have before moving forward. Tempus operates under <strong>CAP and CLIA accreditation</strong>, and our data governance framework includes explicit controls over how de-identified patient data is used in AI model development, with <strong>institution-level opt-out provisions available</strong>. I'll send you our full data privacy and compliance documentation package today — <strong>BAA template, data use agreement terms, and HIPAA compliance framework</strong> — everything your legal team will need to begin their review. Would it help to have <strong>Tempus's legal and compliance team join a call with Northwestern's legal team directly</strong> to answer questions in real time?",
+   elevatorPitch:"Dr. Benson, I know the data governance review is the gating condition right now, and I want to make sure your legal team has everything they need to move efficiently. I'll send our full compliance documentation package today — BAA template, data use agreement, HIPAA framework, and AI data governance summary. While that review proceeds, I'd love to share the clinical case for your GI patients: xT CDx includes DPYD pharmacogenomics that flags patients at elevated 5-FU toxicity risk before treatment starts, and PurIST classifies pancreas cancer subtypes to guide FOLFIRINOX decisions. Would a brief clinical overview be useful while legal does their work?"},
+
+  {name:"Leonidas C. Platanias MD",rank:9,specialty:"Medical Oncology",focus:"Acute Leukemias, Myelodysplastic Syndromes",institution:"NMH - Lurie Cancer Center",seniority:"High",patients:140,panelFit:5,crm:false,composite:0.641,
+   obstacles:[],
+   crmNote:null,
+   products:[
+     {name:"xT Heme + xR",detail:"Purpose-built for hematologic malignancies: 648-gene DNA sequencing + whole transcriptome RNA detecting <strong>BCR-ABL, PML-RARA</strong>, and other diagnostically critical fusions. For MDS, integrates <strong>IPSS-M prognostic scoring</strong>. For acute leukemias, informs subclassification, risk stratification, and treatment decisions. <strong>Results in 9 days</strong> from specimen receipt, grounded in NCCN guidelines and MSK OncoKB."}
+   ],
+   snapshot:"Dr. Platanias ranks <strong>#9</strong> with a composite score of <strong>0.641</strong>, reflecting a strong volume of <strong>140 hematology patients/month</strong> and a perfect panel fit score of <strong>5/5</strong> — his exclusive focus on acute leukemias and MDS aligns precisely with Tempus's xT Heme + xR panel. The <strong>absence of CRM history</strong> is the primary driver of the lower ranking; as a Professor at Lurie, he is a high-priority cold outreach target.",
+   objectionHandler:"Dr. Platanias, your acute leukemia and MDS practice represents one of the highest-fit opportunities in our Northwestern Medicine territory for <strong>Tempus's xT Heme + xR panel</strong>. With 140 hematology patients per month, the combination of 648-gene DNA sequencing and whole transcriptome RNA — with <strong>IPSS-M integration for MDS risk stratification</strong> and fusion detection for leukemia subclassification — could provide molecular clarity on cases where treatment decisions are currently made with incomplete genomic information. Tempus delivers results in <strong>9 days from specimen receipt</strong>, with reports grounded in MSK OncoKB and NCCN guidelines. I'd welcome the opportunity to walk through two or three of your most complex recent MDS cases and show you exactly what the Tempus report would have added.",
+   elevatorPitch:"Dr. Platanias, your focus on acute leukemias and MDS is a direct match for Tempus's xT Heme + xR panel — 648-gene DNA sequencing combined with whole transcriptome RNA that detects BCR-ABL, PML-RARA, and the full spectrum of diagnostically critical fusions, with IPSS-M integration for MDS risk stratification. Results are delivered in 9 days, grounded in NCCN guidelines and MSK OncoKB. With 140 hematology patients per month, how often are you encountering cases where the molecular subtype is ambiguous or where treatment decisions are waiting on fusion confirmation?"},
+
+  {name:"Timothy M. Kuzel MD",rank:10,specialty:"Medical Oncology",focus:"Melanoma, Prostate Cancer, Kidney Cancer, Bladder Cancer, Skin Cancer",institution:"NM Orland Park / Palos Hospital",seniority:"High",patients:136,panelFit:4,crm:false,composite:0.612,
+   obstacles:[],
+   crmNote:null,
+   products:[
+     {name:"xT CDx + IPS",detail:"xT CDx covers <strong>BRAF V600E and TMB</strong> for melanoma treatment decisions, <strong>HRD testing for prostate cancer PARP inhibitor eligibility</strong>, and MSI/TMB for bladder cancer immunotherapy. The <strong>IPS Immune Profile Score</strong> add-on predicts checkpoint inhibitor response — particularly valuable for Dr. Kuzel's melanoma and GU cancer patients on immunotherapy regimens."},
+     {name:"Clinical Trial Matching",detail:"Tempus TIME network matches <strong>96% of patients</strong> to active clinical trials when genomic data is paired with clinical information — 100 sites, 1,500+ active trials. Especially valuable for a <strong>community practice</strong> where trial access is more limited than at academic centers."}
+   ],
+   snapshot:"Dr. Kuzel ranks <strong>#10</strong> with a composite score of <strong>0.612</strong>, reflecting a solid volume of <strong>136 GU and skin cancer patients/month</strong> and high seniority as Clinical Professor. The <strong>absence of CRM history</strong> is the primary ranking driver; his suburban community practice location and broad GU + skin cancer focus represent a meaningful cold outreach opportunity where Tempus's trial matching adds particular value.",
+   objectionHandler:"Dr. Kuzel, with your genitourinary and melanoma practice at Orland Park, Tempus offers something particularly valuable for a community setting — <strong>clinical trial matching</strong>. When genomic data from xT CDx is combined with clinical information, <strong>96% of patients can be matched to an active clinical trial</strong> through Tempus's TIME network of 100 sites and 1,500+ active trials — access that's harder to find in a community setting. For your prostate cancer patients, <strong>HRD testing identifies PARP inhibitor candidates</strong>, and for your melanoma patients, the <strong>IPS Immune Profile Score</strong> optimizes checkpoint inhibitor selection. I'd love to show you what the Tempus report looks like for a prostate case and a melanoma case side by side — could we find 20 minutes this month?",
+   elevatorPitch:"Dr. Kuzel, for your Orland Park patients with prostate cancer, bladder cancer, and melanoma, Tempus xT CDx identifies PARP inhibitor candidates via HRD testing, optimizes immunotherapy selection via IPS scoring, and matches 96% of patients to active clinical trials — access that's often harder to find in a community setting. Our combined DNA + RNA approach achieves a 43.4% therapy match rate versus 29.6% with DNA alone. With 136 patients per month across genitourinary and skin cancers, would a 20-minute case review — one prostate, one melanoma — be a useful starting point?"},
+
+  {name:"Rozina A. Chowdhery MD",rank:11,specialty:"Hematology and Medical Oncology",focus:"Breast Cancer, GI Cancer, Genitourinary Cancers, Lung Cancer, Kidney Cancer",institution:"NMH - Old Irving Park Outpatient Center",seniority:"Mid",patients:125,panelFit:4,crm:false,composite:0.578,
+   obstacles:[],
+   crmNote:null,
+   products:[
+     {name:"xT CDx",detail:"Single FDA-approved 648-gene panel covering <strong>all of Dr. Chowdhery's solid tumor types</strong> — breast, lung, GI, and kidney — in one order and one report format. <strong>One panel, one vendor, one learning curve</strong> for her ordering staff."},
+     {name:"xR RNA Sequencing",detail:"Adds fusion detection identifying <strong>21% more patients eligible for targeted therapies</strong> vs DNA alone — ALK, RET, ROS1, and NTRK rearrangements missed by standard sequencing. For breast cancer patients, <strong>xF liquid biopsy</strong> monitors ESR1 resistance in real time from a blood draw in <strong>7 days</strong>."}
+   ],
+   snapshot:"Dr. Chowdhery ranks <strong>#11</strong> with a composite score of <strong>0.578</strong>, reflecting a moderate patient volume of <strong>125 patients/month</strong> and a panel fit score of <strong>4/5</strong>. The <strong>absence of CRM history</strong> is the primary ranking driver — she represents a high-potential cold outreach target whose diverse multi-tumor practice would benefit broadly from Tempus's solid tumor portfolio.",
+   objectionHandler:"Dr. Chowdhery, with a practice spanning breast, lung, GI, and kidney cancer, Tempus's <strong>xT CDx is designed to simplify rather than complicate your testing workflow</strong> — one FDA-approved 648-gene panel covers all your solid tumor types with a single order and a single report format your team learns once. For your lung cancer patients, adding xR RNA sequencing identifies <strong>21% more patients with actionable driver fusions</strong> vs DNA alone. And for your breast cancer patients, xF liquid biopsy detects ESR1 resistance from a blood draw in <strong>7 days</strong>. I'd love to start with a brief overview of what the Tempus report looks like across two or three of your most common tumor types — would 20 minutes work?",
+   elevatorPitch:"Dr. Chowdhery, for a practice covering breast, lung, GI, and kidney cancer, Tempus offers something simple: xT CDx is one FDA-approved panel that covers all your solid tumor types in one order, one report, one vendor relationship. For your lung cancer patients, adding RNA sequencing identifies 21% more patients with actionable driver fusions. With 125 patients per month across multiple tumor types, the 43.4% combined therapy match rate represents a meaningful number of additional patients matched to treatment each month. Can we find 20 minutes to walk through what this looks like for two of your most common cases?"},
+
+  {name:"Adam E. Prescott MD",rank:12,specialty:"Hematology and Medical Oncology",focus:"Breast Cancer, GI Cancer, Lung Cancer, Lymphoma, Multiple Myeloma, MDS",institution:"NM Lake Forest / Grayslake Cancer Center",seniority:"Mid",patients:124,panelFit:4,crm:false,composite:0.551,
+   obstacles:[],
+   crmNote:null,
+   products:[
+     {name:"xT CDx (Solid Tumors)",detail:"FDA-approved 648-gene panel for breast, lung, and GI cancers — <strong>43.4% therapy match rate</strong> with DNA + RNA sequencing. One panel, one report, covering all Dr. Prescott's solid tumor types."},
+     {name:"xT Heme + xR (Hematologic Malignancies)",detail:"Purpose-built for lymphoma, multiple myeloma, and MDS with <strong>IPSS-M prognostic scoring</strong>, fusion detection, and risk categorization. <strong>Results in 9 days.</strong> Enables Dr. Prescott to use <strong>a single vendor for both solid tumor and hematologic testing</strong> — simplifying ordering, reporting, and account management."}
+   ],
+   snapshot:"Dr. Prescott ranks <strong>#12</strong> with a composite score of <strong>0.551</strong>, reflecting the lowest composite in the territory due to lower patient volume at <strong>124 patients/month</strong> and no prior CRM engagement. His unique dual solid tumor and hematologic focus makes him a strong candidate for <strong>both Tempus portfolios</strong>, representing a long-horizon high-breadth relationship investment.",
+   objectionHandler:"Dr. Prescott, your practice is distinctive in the Northwestern territory because you're seeing both <strong>solid tumor and hematologic malignancy patients</strong> — breast, lung, and GI alongside lymphoma, myeloma, and MDS. That breadth is actually an advantage with Tempus, because we're one of the only vendors with <strong>dedicated validated panels for both</strong>: xT CDx for solid tumors and xT Heme + xR for hematologic malignancies, all under <strong>one ordering system, one account team, and one report format</strong>. For your MDS patients specifically, xT Heme integrates <strong>IPSS-M prognostic scoring</strong> directly into the report. I'd love to start with a case review across one solid tumor and one hematologic case to show you what the Tempus reports look like side by side.",
+   elevatorPitch:"Dr. Prescott, your practice covers both solid tumors and hematologic malignancies — and Tempus is one of the only genomic testing companies with validated, purpose-built panels for both. xT CDx for your breast, lung, and GI patients, and xT Heme + xR for your lymphoma, myeloma, and MDS patients — all through a single ordering platform with Epic integration. For your MDS patients, IPSS-M risk stratification is built directly into the xT Heme report. With your practice growing at Lake Forest and Grayslake, getting your genomic testing infrastructure right now means your team learns one system that scales with you. Could we find 20 minutes for a case-based overview?"}
+];
+
+let currentTab='leaderboard', selectedDoctor=null;
+
+function showTab(t){
+  currentTab=t;
+  document.getElementById('nav-lb').classList.toggle('active',t==='leaderboard');
+  document.getElementById('nav-hub').classList.toggle('active',t==='hub');
+  render();
+}
+function selectDoctor(name){
+  selectedDoctor=name;
+  if(currentTab!=='hub')showTab('hub');
+  else render();
+}
+function esc(s){return s.replace(/'/g,"&#39;")}
+
+function render(){
+  document.getElementById('main').innerHTML=currentTab==='leaderboard'?renderLB():renderHub();
+}
+
+function renderLB(){
+  const rows=DOCTORS.map(d=>{
+    const rc=d.rank<=3?'top3':'';
+    const bc=d.rank===1?'r1':d.rank===2?'r2':d.rank===3?'r3':'';
+    const bw=Math.round(d.composite*100);
+    return `<div class="table-row ${rc}" onclick="selectDoctor('${esc(d.name)}')">
+      <div><span class="rank-badge ${bc}">${d.rank}</span></div>
+      <div><div class="doc-name">${d.name.replace(' MD','')}</div><div class="doc-inst">${d.institution}</div></div>
+      <div><span class="spec-pill">${d.specialty.length>22?d.specialty.replace('Hematology and Medical','Hem/Med'):d.specialty}</span></div>
+      <div><span class="focus-pill">${d.focus.split(',')[0].trim()}</span></div>
+      <div class="patients-val">${d.patients}</div>
+      <div class="patients-val" style="font-size:11px">${d.panelFit}/5</div>
+      <div class="score-bar-wrap"><div class="score-bar"><div class="score-bar-fill" style="width:${bw}%"></div></div><span class="score-val">${d.composite.toFixed(3)}</span></div>
+      <div><span class="crm-pill ${d.crm?'':'none'}">${d.crm?'Contacted':'Not contacted'}</span></div>
+    </div>`;
+  }).join('');
+  return `<div class="page-title">Territory Leaderboard</div>
+    <div class="page-sub">12 Northwestern Medicine oncologists · Ranked by composite impact score · Click any row to view in Sales Execution Hub</div>
+    <div class="table-card">
+      <div class="table-header-row"><div>#</div><div>Physician</div><div>Specialty</div><div>Primary Focus</div><div>Pts/mo</div><div>Fit</div><div>Score</div><div>CRM</div></div>
+      ${rows}
+    </div>`;
+}
+
+function renderHub(){
+  const list=DOCTORS.map(d=>`
+    <div class="doctor-item ${selectedDoctor===d.name?'active':''}" onclick="selectDoctor('${esc(d.name)}')">
+      <div class="di-rank">#${d.rank} · ${d.composite.toFixed(3)}</div>
+      <div class="di-name">${d.name.replace(' MD','')}</div>
+      <div class="di-focus">${d.focus.split(',')[0].trim()}</div>
+    </div>`).join('');
+
+  if(!selectedDoctor)return`
+    <div class="page-title">Sales Execution Hub</div>
+    <div class="page-sub">Select a physician to view AI-generated sales intelligence</div>
+    <div class="hub-layout"><div class="doctor-list">${list}</div>
+    <div class="empty-state"><div class="empty-icon">🧬</div><div class="empty-title">Select a physician</div><div class="empty-sub">Choose from the ranked list to view objection handler and elevator pitch</div></div></div>`;
+
+  const doc=DOCTORS.find(d=>d.name===selectedDoctor);
+
+  const productHTML=doc.products.length===1
+    ?`<div class="agent-card-body">${doc.products[0].detail.replace(/<strong>/g,'<strong>').replace(/\n/g,'<br>')}<br><br><span style="font-size:12px;color:var(--gray-400);font-style:italic">Recommended panel: <strong style="color:var(--teal)">${doc.products[0].name}</strong></span></div>`
+    :`<div class="agent-card-body"><ul class="product-list">${doc.products.map(p=>`<li class="product-item"><span class="product-bullet"></span><div class="product-text"><strong style="color:var(--teal)">${p.name}:</strong> ${p.detail}</div></li>`).join('')}</ul></div>`;
+
+  const obstacleHTML=doc.obstacles.length>0?`
+    <div class="obstacle-row">
+      <span class="obstacle-label">Key obstacle${doc.obstacles.length>1?'s':''}:</span>
+      ${doc.obstacles.map(o=>`<span class="obstacle-tag">${o}</span>`).join('')}
+    </div>`:'';
+
+  const crmHTML=doc.crmNote?`
+    <div class="crm-inline">
+      <div class="crm-inline-label">CRM Note on File</div>
+      <div class="crm-inline-text">${doc.crmNote}</div>
+    </div>`:'';
+
+  return`
+    <div class="page-title">Sales Execution Hub</div>
+    <div class="page-sub">AI-generated sales intelligence · Agents 3 + 4 · Pre-computed from Tempus knowledge base</div>
+    <div class="hub-layout">
+      <div class="doctor-list">${list}</div>
+      <div class="output-area">
+        <div class="output-header">
+          <div class="selected-name">${doc.name.replace(' MD','')}, MD</div>
+          <div class="selected-meta">${doc.specialty} · ${doc.institution} · ${doc.seniority} seniority · ${doc.crm?'✓ CRM on file':'No prior contact'}</div>
+        </div>
+
+        <!-- PROVIDER SNAPSHOT -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <span class="agent-tag tag-navy">Agents 1 + 4</span>
+            <span class="section-card-title">Provider Snapshot</span>
+          </div>
+          <div class="section-card-body">
+            <div class="snapshot-grid">
+              <div class="snapshot-metric"><div class="sm-value">#${doc.rank}</div><div class="sm-label">Territory rank</div></div>
+              <div class="snapshot-metric"><div class="sm-value">${doc.patients}</div><div class="sm-label">Patients / mo</div></div>
+              <div class="snapshot-metric"><div class="sm-value">${doc.composite.toFixed(3)}</div><div class="sm-label">Composite score</div></div>
+            </div>
+            <div style="font-size:13.5px;line-height:1.8;color:var(--gray-700)">${doc.snapshot}</div>
+          </div>
+        </div>
+
+        <!-- PRODUCT MATCH -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <span class="agent-tag tag-teal">Agent 3</span>
+            <span class="section-card-title">Recommended Tempus Products</span>
+          </div>
+          ${productHTML}
+        </div>
+
+        <!-- OBJECTION HANDLER -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <span class="agent-tag tag-blue">Agent 4</span>
+            <span class="section-card-title">Objection Handler</span>
+          </div>
+          <div class="section-card-body">
+            ${obstacleHTML}
+            ${crmHTML}
+            <div style="font-size:13.5px;line-height:1.8;color:var(--gray-700)">${doc.objectionHandler}</div>
+          </div>
+        </div>
+
+        <!-- ELEVATOR PITCH -->
+        <div class="pitch-card">
+          <div class="pitch-header">
+            <span class="agent-tag" style="background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9)">Agent 4</span>
+            <span class="pitch-title">30-Second Elevator Pitch</span>
+          </div>
+          <div class="pitch-body">${doc.elevatorPitch}</div>
+        </div>
+
+      </div>
+    </div>`;
+}
+
+render();
+</script>
+</body>
+</html>
