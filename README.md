@@ -20,6 +20,18 @@ tempus-sales-copilot/
 
 ---
 
+## 📊 Data Sources & Curation
+
+The platform ingests and fuses three distinct data streams to simulate realistic territory conditions:
+
+- **Market Intelligence:** Sourced directly from the Northwestern Medicine physician portal, covering 12 oncologists across 4 high-alignment subspecialties matching Tempus's clinical portfolio (xT, xF, xR, xT Heme), exclusively targeting MDs with independent test ordering authority across main campuses and suburban affiliates.
+
+- **Product Knowledge Base:** Comprehensive product specifications extracted from 10 scraped pages of Tempus.com — including xT CDx, xF/xF+ liquid biopsy, xR, xT Heme, clinical trial matching, and EHR integrations. A strict zero-hallucination guardrail bounds all agent outputs to verified web statistics only.
+
+- **CRM Notes:** Synthesized interaction records covering authentic oncology sales objections (reimbursement, turnaround time, EHR integration, competing vendors, tissue sufficiency, data privacy). 4 of 12 physicians have no prior CRM history, replicating real-world cold lead conditions.
+
+---
+
 ## 🤖 Multi-Agent Pipeline
 
 The pipeline runs 4 specialized agents with **3 total LLM calls** — reduced from 25+ via unified JSON batching:
@@ -35,18 +47,6 @@ Agents 1 and 2 run in parallel via Python threading. Agents 3 and 4 are merged i
 
 ---
 
-## 📊 Data Sources & Curation
-
-The platform ingests and fuses three distinct data streams to simulate realistic territory conditions:
-
-- **Market Intelligence:** Sourced directly from the Northwestern Medicine physician portal, covering 12 oncologists across 4 high-alignment subspecialties matching Tempus's clinical portfolio (xT, xF, xR, xT Heme), exclusively targeting MDs with independent test ordering authority across main campuses and suburban affiliates.
-
-- **Product Knowledge Base:** Comprehensive product specifications extracted from 10 scraped pages of Tempus.com — including xT CDx, xF/xF+ liquid biopsy, xR, xT Heme, clinical trial matching, and EHR integrations. A strict zero-hallucination guardrail bounds all agent outputs to verified web statistics only.
-
-- **CRM Notes:** Synthesized interaction records covering authentic oncology sales objections (reimbursement, turnaround time, EHR integration, competing vendors, tissue sufficiency, data privacy). 4 of 12 physicians have no prior CRM history, replicating real-world cold lead conditions.
-
----
-
 ## 🚀 Accessing the Prototypes
 
 ### 🌐 Standalone Pre-Computed Prototype (Recommended)
@@ -55,13 +55,8 @@ A fully rendered, interactive HTML prototype with pre-computed agent outputs is 
 
 **[View the Live Sales Copilot Prototype](https://bingomuse.github.io/Muse-Miao_Tempus-Sales-Copilot-Case-Study/prototype/precomputed_copilot_demo.html)**
 
-Or open the file directly in any browser:
 
-```
-prototype/precomputed_copilot_demo.html
-```
-
-> **Why pre-computed?** The prototype was built under free-tier API constraints. Although the pipeline was refactored to use only 3 batched LLM calls (down from 25+), daily token limits across Anthropic, Groq, Mistral, and Google Gemini were exhausted during development and debugging. All Agent 3+4 outputs were therefore generated in advance using Claude and the scraped Tempus knowledge base, then hardcoded into the HTML prototype — guaranteeing zero runtime dependency and hallucination-free outputs grounded in real Tempus product data.
+> **Why pre-computed?** The prototype was built under free-tier API constraints. Although the pipeline was refactored to use only 3 batched LLM calls, daily token limits across Anthropic, Groq, Mistral, and Google Gemini were exhausted during development and debugging. All Agent 3+4 outputs were therefore generated in advance using Claude, then hardcoded into the HTML prototype — guaranteeing zero runtime dependency and hallucination-free outputs grounded in real Tempus product data.
 
 ---
 
