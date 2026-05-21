@@ -4,18 +4,31 @@ An intelligent, multi-agent sales enablement prototype designed to bridge the da
 
 ---
 
+## 🎬 Demo & Prototype Access
+
+| | Link |
+|---|---|
+| **▶ Demo Video** | [Watch the prototype walkthrough](https://www.loom.com/share/375ab3336eea439386ce03893d935308) |
+| **🌐 Live Prototype** | [Open the interactive HTML prototype](https://bingomuse.github.io/Muse-Miao_Tempus-Sales-Copilot-Case-Study/prototype/precomputed_copilot_demo.html) |
+| **📊 Slide Deck** | [View the full presentation](slides/tempus_sales_copilot_deck.pdf) |
+
+> **No installation required** — the live prototype opens directly in any browser with all agent outputs pre-computed.
+
+---
+
 ## 🏗️ Repository Structure
 
 ```
 tempus-sales-copilot/
 ├── data/                              # Market intelligence CSV, CRM notes, knowledge base
+│   ├── 1. nm_oncologists_market_intelligence.csv/
+│   └── 2. tempus_product_knowledge_base.pdf/
+│   └── 3. crm_notes.txt/                  
 ├── prototype/
 │   ├── pipeline-app/                  # Streamlit multi-agent app (app.py + requirements.txt)
 │   └── precomputed_copilot_demo.html  # Standalone pre-computed demo
 ├── slides/
 │   └── tempus_sales_copilot_deck.pdf
-└── assets/
-    └── demo_video.mp4
 ```
 
 ---
@@ -79,13 +92,6 @@ streamlit run prototype/pipeline-app/app.py
 ```
 
 > **Note on live execution:** The live pipeline will successfully run Agent 1 (deterministic ranking) and Agent 2 (CRM insights) immediately. Agent 3+4 requires a Groq API key with sufficient daily token quota. If the free-tier daily limit is reached, open the standalone HTML prototype for the full end-to-end experience.
-
----
-
-## 📂 Project Deliverables
-
-- **Slide Deck:** [slides/tempus_sales_copilot_deck.pdf](slides/tempus_sales_copilot_deck.pdf)
-- **Demo Video:** [demo_video](https://www.loom.com/share/375ab3336eea439386ce03893d935308)
 
 ---
 
