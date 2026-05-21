@@ -85,7 +85,7 @@ streamlit run prototype/pipeline-app/app.py
 ## 📂 Project Deliverables
 
 - **Slide Deck:** [slides/tempus_sales_copilot_deck.pdf](slides/tempus_sales_copilot_deck.pdf)
-- **Demo Video:** [assets/demo_video.mp4](assets/demo_video.mp4)
+- **Demo Video:** [demo_video](https://www.loom.com/share/375ab3336eea439386ce03893d935308)
 
 ---
 
